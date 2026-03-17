@@ -2,6 +2,8 @@
 
 **Body surface area indexing can reverse the apparent direction of creatinine-based estimated glomerular filtration rate change 12 months after bariatric surgery**
 
+> Companion repository for the article submitted to *Nephrology Dialysis Transplantation* (NDT).
+
 ## Summary
 
 This repository contains the analysis code and aggregated results for a dual-cohort study demonstrating that BSA indexing can reverse the apparent direction of creatinine-based eGFR change after Roux-en-Y gastric bypass (RYGB).
@@ -65,9 +67,6 @@ figures/          Publication-ready figures (300 DPI)
   fig3_forest_discordance.png    Forest plot + discordance
   fig4_dose_response.png         Dose-response
   sfig1-sfig7                    Supplementary figures
-
-manuscript/       Quarto manuscript source
-  estudo_c_manuscript.qmd        Reproducible manuscript (Quarto)
 ```
 
 ## Data Availability
@@ -85,11 +84,6 @@ This study follows the **STROBE** statement and **RECORD** extension for studies
 - Python 3.13+
 - pandas, numpy, scipy, statsmodels, matplotlib
 - python-docx (for manuscript generation)
-- Quarto 1.8+ (optional, for QMD rendering)
-
-## Target Journal
-
-Nephrology Dialysis Transplantation (NDT) — Original Article
 
 ## License
 

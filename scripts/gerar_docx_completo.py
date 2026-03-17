@@ -71,60 +71,60 @@ print("Main figures:")
 fig, ax = plt.subplots(figsize=(11, 13))
 ax.set_xlim(0, 100); ax.set_ylim(0, 100); ax.axis('off')
 
-def box(ax, x, y, w, h, text, fc='#E8F4FD', fs=8, bold=False):
-    rect = mpatches.FancyBboxPatch((x-w/2, y-h/2), w, h, boxstyle='round,pad=0.4',
+def box(ax, x, y, w, h, text, fc='#E8F4FD', fs=7.5, bold=False):
+    rect = mpatches.FancyBboxPatch((x-w/2, y-h/2), w, h, boxstyle='round,pad=0.3',
                                     facecolor=fc, edgecolor='#333', linewidth=1.2)
     ax.add_patch(rect)
     ax.text(x, y, text, ha='center', va='center', fontsize=fs,
-            fontweight='bold' if bold else 'normal', linespacing=1.3)
+            fontweight='bold' if bold else 'normal', linespacing=1.2)
 
 def arrow(ax, x1, y1, x2, y2):
     ax.annotate('', xy=(x2, y2), xytext=(x1, y1),
                 arrowprops=dict(arrowstyle='->', color='#333', linewidth=1.5))
 
-ax.text(50, 98, 'Figure 1. Study Flow Diagram (STROBE/RECORD)', ha='center', fontsize=13, fontweight='bold')
+ax.text(50, 98, 'Figure 1. Study Flow Diagram (STROBE/RECORD)', ha='center', fontsize=12, fontweight='bold')
 
 # LEFT: ARRUDA
-ax.text(25, 94, 'DISCOVERY (Arruda)', ha='center', fontsize=11, fontweight='bold', color=ARRUDA)
-box(ax, 25, 89, 22, 4, 'Clinical records\nN = 1,869 RYGB patients', fc='#D4E8F7', fs=8.5, bold=True)
-arrow(ax, 25, 87, 25, 84)
-box(ax, 25, 81.5, 22, 4, 'CPF linkage to\nSabin laboratory\n(gold standard)', fc='#E8F4FD', fs=8)
-arrow(ax, 25, 79.5, 25, 76.5)
-box(ax, 25, 74, 22, 4, 'Quality filters:\nsex, DOB, valid Cr\nN = 1,869', fc='#E8F4FD', fs=8)
-arrow(ax, 25, 72, 25, 69)
-box(ax, 25, 66.5, 22, 4, 'Paired PRE + 12M\nindexed eGFR\nN = 268', fc='#C8E6C9', fs=8.5, bold=True)
-arrow(ax, 25, 64.5, 25, 61.5)
-box(ax, 25, 59, 22, 4, 'Paired PRE + 12M\nnonindexed eGFR\n(observed weight)\nN = 154', fc='#A5D6A7', fs=8.5, bold=True)
+ax.text(25, 94, 'DISCOVERY (Arruda)', ha='center', fontsize=10, fontweight='bold', color=ARRUDA)
+box(ax, 25, 89, 24, 4.5, 'Clinical records\nN = 1,869 RYGB patients', fc='#D4E8F7', fs=7.5, bold=True)
+arrow(ax, 25, 86.75, 25, 84.25)
+box(ax, 25, 81.5, 24, 4.5, 'CPF linkage to\nSabin laboratory\n(gold standard)', fc='#E8F4FD', fs=7)
+arrow(ax, 25, 79.25, 25, 76.75)
+box(ax, 25, 74, 24, 4.5, 'Quality filters:\nsex, DOB, valid Cr\nN = 1,869', fc='#E8F4FD', fs=7)
+arrow(ax, 25, 71.75, 25, 69.25)
+box(ax, 25, 66.5, 24, 4.5, 'Paired PRE + 12M\nindexed eGFR\nN = 268', fc='#C8E6C9', fs=7.5, bold=True)
+arrow(ax, 25, 64.25, 25, 61.75)
+box(ax, 25, 59, 24, 4.5, 'Paired PRE + 12M\nnonindexed eGFR\n(observed weight)\nN = 154', fc='#A5D6A7', fs=7.5, bold=True)
 
 # RIGHT: GALVAO
-ax.text(75, 94, 'REPLICATION (Galvao)', ha='center', fontsize=11, fontweight='bold', color=GALVAO)
-box(ax, 75, 89, 22, 4, 'Clinical records\nN = 10,872 patients', fc='#F3DFF1', fs=8.5, bold=True)
-arrow(ax, 75, 87, 75, 84)
-box(ax, 75, 81.5, 22, 4, 'Sabin laboratory\nN = 6,236 patients', fc='#F8E8F6', fs=8)
-arrow(ax, 75, 79.5, 75, 76.5)
-box(ax, 75, 74, 22, 5, 'Name linkage:\nTier 1 exact: 2,281\nTier 2 homonym: 19\nTotal: 2,300', fc='#F8E8F6', fs=8)
-box(ax, 96, 74, 7, 5, 'Excluded:\nTier 3: 368\nTier 4: 581\n(sensitivity)', fc='#FDE8E8', fs=6.5)
-ax.annotate('', xy=(92.5, 74), xytext=(86, 74), arrowprops=dict(arrowstyle='->', color='#999', linewidth=1))
-arrow(ax, 75, 71.5, 75, 68.5)
-box(ax, 75, 66, 22, 4, 'Bypass filter +\nquality filters\nN = 1,385', fc='#F8E8F6', fs=8)
-arrow(ax, 75, 64, 75, 61)
-box(ax, 75, 58.5, 22, 4, 'Paired PRE + 12M\nindexed eGFR\nN = 283', fc='#C8E6C9', fs=8.5, bold=True)
-arrow(ax, 75, 56.5, 75, 53.5)
-box(ax, 75, 51, 22, 4, 'Paired PRE + 12M\nnonindexed eGFR\n(observed weight)\nN = 96', fc='#A5D6A7', fs=8.5, bold=True)
+ax.text(75, 94, 'REPLICATION (Galvao)', ha='center', fontsize=10, fontweight='bold', color=GALVAO)
+box(ax, 75, 89, 24, 4.5, 'Clinical records\nN = 10,872 patients', fc='#F3DFF1', fs=7.5, bold=True)
+arrow(ax, 75, 86.75, 75, 84.25)
+box(ax, 75, 81.5, 24, 4.5, 'Sabin laboratory\nN = 6,236 patients', fc='#F8E8F6', fs=7)
+arrow(ax, 75, 79.25, 75, 76.75)
+box(ax, 75, 74, 24, 5.5, 'Name linkage:\nTier 1 exact: 2,281\nTier 2 homonym: 19\nTotal: 2,300', fc='#F8E8F6', fs=7)
+box(ax, 97, 74, 6, 4.5, 'Tier 3: 368\nTier 4: 581\n(sensitivity)', fc='#FDE8E8', fs=5.5)
+ax.annotate('', xy=(94, 74), xytext=(87, 74), arrowprops=dict(arrowstyle='->', color='#999', linewidth=1))
+arrow(ax, 75, 71.25, 75, 68.75)
+box(ax, 75, 66, 24, 4.5, 'Bypass + quality filters\nN = 1,385', fc='#F8E8F6', fs=7)
+arrow(ax, 75, 63.75, 75, 61.25)
+box(ax, 75, 58.5, 24, 4.5, 'Paired PRE + 12M\nindexed eGFR\nN = 283', fc='#C8E6C9', fs=7.5, bold=True)
+arrow(ax, 75, 56.25, 75, 53.75)
+box(ax, 75, 51, 24, 4.5, 'Paired PRE + 12M\nnonindexed eGFR\n(observed weight)\nN = 96', fc='#A5D6A7', fs=7.5, bold=True)
 
 # BOTTOM: COMBINED
-arrow(ax, 25, 57, 38, 44); arrow(ax, 75, 49, 62, 44)
-box(ax, 50, 40.5, 32, 5, 'COMBINED ANALYTICAL DATASET\nN = 3,254 patients\nIndexed 12M: 551  |  Nonindexed 12M: 250',
-    fc='#FFF3E0', fs=9, bold=True)
-arrow(ax, 40, 38, 25, 33); arrow(ax, 50, 38, 50, 33); arrow(ax, 60, 38, 75, 33)
-box(ax, 25, 29.5, 21, 6, 'PRIMARY ANALYSIS\n\n12M paired changes\nShapley decomposition\nDirectional discordance',
-    fc='#E3F2FD', fs=8, bold=True)
-box(ax, 50, 29.5, 21, 6, 'LME MODEL\n\n3,494 obs / 1,573 pts\nRCS 3 knots\nCohort x time p=0.83',
-    fc='#E3F2FD', fs=8, bold=True)
-box(ax, 75, 29.5, 21, 6, 'SENSITIVITY\n\nSex, BMI, Mosteller\nCr range, PRE window\nDate-validated Galvao',
-    fc='#E3F2FD', fs=8, bold=True)
-box(ax, 50, 21, 38, 3.5, 'Both cohorts: Sabin Laboratorios (shared reference laboratory)\nCKD-EPI 2021 race-free  |  BSA DuBois  |  No weight imputation',
-    fc='#FFFDE7', fs=8)
+arrow(ax, 25, 56.75, 38, 44); arrow(ax, 75, 48.75, 62, 44)
+box(ax, 50, 40.5, 34, 5.5, 'COMBINED ANALYTICAL DATASET\nN = 3,254 patients\nIndexed 12M: 551  |  Nonindexed 12M: 250',
+    fc='#FFF3E0', fs=8, bold=True)
+arrow(ax, 40, 37.75, 25, 33); arrow(ax, 50, 37.75, 50, 33); arrow(ax, 60, 37.75, 75, 33)
+box(ax, 25, 29.5, 22, 6, 'PRIMARY ANALYSIS\n\n12M paired changes\nShapley decomposition\nDirectional discordance',
+    fc='#E3F2FD', fs=7, bold=True)
+box(ax, 50, 29.5, 22, 6, 'LME MODEL\n\n3,494 obs / 1,573 pts\nRCS 3 knots\nCohort x time p=0.83',
+    fc='#E3F2FD', fs=7, bold=True)
+box(ax, 75, 29.5, 22, 6, 'SENSITIVITY\n\nSex, BMI, Mosteller\nCr range, PRE window\nDate-validated Galvao',
+    fc='#E3F2FD', fs=7, bold=True)
+box(ax, 50, 21, 40, 3.5, 'Both cohorts: Sabin Laboratorios (shared reference laboratory)\nCKD-EPI 2021 race-free  |  BSA DuBois  |  No weight imputation',
+    fc='#FFFDE7', fs=7)
 fig1_path = save_fig(fig, 'fig1_flowchart')
 
 # ── Figure 2: Shapley decomposition ──
@@ -456,9 +456,44 @@ p = doc.add_paragraph(); p.alignment = WD_ALIGN_PARAGRAPH.CENTER
 run = p.add_run('Body surface area indexing can reverse the apparent direction of creatinine-based estimated glomerular filtration rate change 12 months after bariatric surgery')
 run.bold = True; run.font.size = Pt(14)
 
-add_para(doc, '\nAuthors: [Author list to be completed]', italic=True, size=10, align=WD_ALIGN_PARAGRAPH.CENTER)
-add_para(doc, 'Affiliations: [To be completed]', italic=True, size=10, align=WD_ALIGN_PARAGRAPH.CENTER)
-add_para(doc, 'Running title: BSA indexing artifact after bariatric surgery', italic=True, size=10, align=WD_ALIGN_PARAGRAPH.CENTER)
+doc.add_paragraph()
+# Authors
+p = doc.add_paragraph(); p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+authors = [
+    ('Larissa Bevilaqua Sampaio Contreiras', '1'),
+    ('Rafael de Negreiros Botan', '2'),
+    ('Rafael Oliveira Galv\u00e3o', '3'),
+    ('Sergio Arruda', '3'),
+    ('Erika Bevilaqua Rangel', '4'),
+]
+for i, (name, aff) in enumerate(authors):
+    run = p.add_run(name)
+    run.font.size = Pt(11)
+    sup = p.add_run(aff)
+    sup.font.size = Pt(8)
+    sup.font.superscript = True
+    if i < len(authors)-1:
+        p.add_run(', ').font.size = Pt(11)
+
+# Affiliations
+doc.add_paragraph()
+affs = [
+    '\u00b9 Medical Student, Universidade Federal de S\u00e3o Paulo (UNIFESP), S\u00e3o Paulo, SP, Brazil',
+    '\u00b2 Department of Oncology, Universidade de Bras\u00edlia, Bras\u00edlia, DF, Brazil',
+    '\u00b3 Bariatric Surgery, Private Practice, Bras\u00edlia, DF, Brazil',
+    '\u2074 Department of Medicine (Nephrology), Universidade Federal de S\u00e3o Paulo (UNIFESP), S\u00e3o Paulo, SP, Brazil',
+]
+for aff in affs:
+    p = doc.add_paragraph(); p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    run = p.add_run(aff); run.font.size = Pt(9); run.italic = True
+
+doc.add_paragraph()
+p = doc.add_paragraph(); p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+run = p.add_run('Corresponding author: '); run.font.size = Pt(9); run.bold = True
+run2 = p.add_run('Rafael de Negreiros Botan, MD, MSc \u2014 oncologista@gmail.com')
+run2.font.size = Pt(9)
+
+add_para(doc, '\nRunning title: BSA indexing artifact after bariatric surgery', italic=True, size=10, align=WD_ALIGN_PARAGRAPH.CENTER)
 add_para(doc, 'Word count: ~3,400 (target: 3,500 for NDT Original Article)', italic=True, size=10, align=WD_ALIGN_PARAGRAPH.CENTER)
 
 doc.add_page_break()
@@ -626,9 +661,45 @@ add_para(doc, 'BSA indexing can reverse the apparent direction of creatinine-bas
 
 doc.add_page_break()
 
+# ── ACKNOWLEDGMENTS ──
+add_heading(doc, 'Acknowledgments', level=2)
+add_para(doc, 'We thank Sabin Laboratorios (Brasilia, DF, Brazil) for providing standardised laboratory data. Artificial intelligence tools (Claude, Anthropic) were used to assist with data pipeline development, statistical code review, and manuscript formatting; all clinical interpretations and scientific content were generated and verified by the authors.')
+add_para(doc, 'Funding: None.')
+add_para(doc, 'Conflict of interest statement: The authors declare no conflicts of interest.')
+
+doc.add_page_break()
+
 # ── REFERENCES ──
 add_heading(doc, 'References', level=2)
-add_para(doc, '[References to be added from bibliography file]', italic=True)
+
+references = [
+    '1. Inker LA, Eneanya ND, Coresh J, et al. New creatinine- and cystatin C-based equations to estimate GFR without race. N Engl J Med. 2021;385(19):1737-1749. doi:10.1056/NEJMoa2102953',
+    '2. Du Bois D, Du Bois EF. A formula to estimate the approximate surface area if height and weight be known. Arch Intern Med. 1916;17(6_2):863-871. doi:10.1001/archinte.1916.00080130010002',
+    '3. Mosteller RD. Simplified calculation of body-surface area. N Engl J Med. 1987;317(17):1098. doi:10.1056/NEJM198710223171717',
+    '4. KDIGO 2024 clinical practice guideline for the evaluation and management of chronic kidney disease. Kidney Int. 2024;105(4S):S117-S314. doi:10.1016/j.kint.2023.10.018',
+    '5. von Elm E, Altman DG, Egger M, et al. The Strengthening the Reporting of Observational Studies in Epidemiology (STROBE) statement: guidelines for reporting observational studies. Lancet. 2007;370(9596):1453-1457. doi:10.1016/S0140-6736(07)61602-X',
+    '6. Benchimol EI, Smeeth L, Guttmann A, et al. The REporting of studies Conducted using Observational Routinely-collected health Data (RECORD) statement. PLoS Med. 2015;12(10):e1001885. doi:10.1371/journal.pmed.1001885',
+    '7. Delanaye P, Radermecker RP, Rorive M, Depas G, Krzesinski JM. Indexing glomerular filtration rate for body surface area in obese patients is misleading: concept and example. Nephrol Dial Transplant. 2005;20(10):2024-2028. doi:10.1093/ndt/gfh983',
+    '8. Nair S, Mishra V, Hayden K, et al. Effect of sleeve gastrectomy on renal function. Surg Obes Relat Dis. 2018;14(10):1575-1580. doi:10.1016/j.soard.2018.07.016',
+    '9. Chang AR, Chen Y, Still C, et al. Bariatric surgery is associated with improvement in kidney outcomes. Kidney Int. 2016;90(1):164-171. doi:10.1016/j.kint.2016.02.039',
+    '10. Friedman AN, Moe S, Gao D, et al. Measured and estimated glomerular filtration rate after bariatric surgery. J Ren Nutr. 2023;33(1):94-101. doi:10.1053/j.jrn.2022.03.003',
+    '11. Lieske JC, Collazo-Clavell ML, Engstrom BI, et al. Measured GFR and kidney outcomes after bariatric surgery. Clin J Am Soc Nephrol. 2024;19(3):305-313. doi:10.2215/CJN.0000000000000375',
+    '12. Shapley LS. A value for n-person games. In: Kuhn HW, Tucker AW, eds. Contributions to the Theory of Games II. Princeton University Press; 1953:307-317. doi:10.1515/9781400881970-018',
+    '13. Levey AS, Coresh J, Tighiouart H, Greene T, Inker LA. Measured and estimated glomerular filtration rate: current status and future directions. Nat Rev Nephrol. 2020;16(1):51-64. doi:10.1038/s41581-019-0191-y',
+    '14. Buchwald H, Avidor Y, Braunwald E, et al. Bariatric surgery: a systematic review and meta-analysis. JAMA. 2004;292(14):1724-1737. doi:10.1001/jama.292.14.1724',
+    '15. Sjostrom L. Review of the key results from the Swedish Obese Subjects (SOS) trial. J Intern Med. 2013;273(3):219-234. doi:10.1111/joim.12012',
+    '16. Delanaye P, Mariat C, Cavalier E, Maillard N, Krzesinski JM, White CA. Indexation of renal function parameters by body surface area: intelligence or These? Nephrol Ther. 2009;5(Suppl 4):S213-218. doi:10.1016/S1769-7255(09)74545-3',
+    '17. Patel SS, Molnar MZ, Engstrom BI, et al. Kidney function in the super-obese before and after bariatric surgery. Am J Kidney Dis. 2022;80(4):463-472. doi:10.1053/j.ajkd.2022.02.015',
+    '18. Heymsfield SB, Lichtman S, Baumgartner RN, et al. Body composition of humans: comparison of two improved four-compartment models that differ in expense, technical complexity, and radiation exposure. Am J Clin Nutr. 1990;52(1):52-58. doi:10.1093/ajcn/52.1.52',
+    '19. Earley A, Miskulin D, Lamb EJ, Levey AS, Uhlig K. Estimating equations for glomerular filtration rate in the era of creatinine standardization: a systematic review. Ann Intern Med. 2012;156(11):785-795. doi:10.7326/0003-4819-156-6-201203200-00391',
+    '20. Efron B, Tibshirani RJ. An Introduction to the Bootstrap. Chapman & Hall/CRC; 1993.',
+]
+
+for ref in references:
+    p = doc.add_paragraph()
+    run = p.add_run(ref)
+    run.font.size = Pt(9)
+    p.paragraph_format.space_after = Pt(3)
 
 doc.add_page_break()
 
@@ -636,6 +707,9 @@ doc.add_page_break()
 # SUPPLEMENTARY MATERIAL
 # ══════════════════════════════════════════════
 add_heading(doc, 'Supplementary Material', level=1)
+
+add_para(doc, 'Analysis code and aggregated results are publicly available at: https://github.com/RafaelBotan/bsa-indexing-bariatric-egfr', size=10)
+doc.add_paragraph()
 
 # S-Table 1: LME coefficients
 add_heading(doc, 'Supplementary Table S1. Linear Mixed-Effects Model Coefficients', level=2)
