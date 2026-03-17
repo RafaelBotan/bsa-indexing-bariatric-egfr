@@ -87,6 +87,10 @@ This study follows the **STROBE** statement and **RECORD** extension for studies
 - pandas, numpy, scipy, statsmodels, matplotlib
 - python-docx (for manuscript generation)
 
+## Registration
+
+This study is registered on the Open Science Framework: https://osf.io/9r5w7/
+
 ## License
 
 Code: MIT License
