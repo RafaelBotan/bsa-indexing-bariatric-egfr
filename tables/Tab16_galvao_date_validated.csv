@@ -1,0 +1,5 @@
+Sensitivity,N_idx,Delta_idx,p_idx,N_NI,Delta_NI,p_NI,Divergence,N_discordant,Pct_discordant
+Galvao_Nominal 301-548,48,-0.06,9.64e-01,17.0,-18.94,2.29e-08,21.38,13.0,76.5%
+Galvao_Tight 320-410,18,+2.74,1.79e-01,6.0,,,,,
+Galvao_Broad 275-548,55,+0.32,7.83e-01,19.0,-18.63,1.91e-09,20.73,14.0,73.7%
+Galvao_Full_no_filter,283,+2.80,3.82e-07,,,,,,

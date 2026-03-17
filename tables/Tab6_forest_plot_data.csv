@@ -1,0 +1,9 @@
+Endpoint,Cohort,N,Mean,CI95,p_interaction
+Delta_eGFR_idx_12M,Arruda,268,3.60,"[1.48, 5.72]",0.5029
+Delta_eGFR_idx_12M,Galvao,283,2.80,"[1.74, 3.86]",0.5029
+Delta_eGFR_NI_12M,Arruda,154,-16.19,"[-19.49, -12.89]",0.2805
+Delta_eGFR_NI_12M,Galvao,96,-18.70,"[-20.92, -16.47]",0.2805
+Delta_BSA_12M,Arruda,730,-0.30,"[-0.31, -0.30]",8.58e-05
+Delta_BSA_12M,Galvao,269,-0.33,"[-0.34, -0.32]",8.58e-05
+Divergence_12M,Arruda,154,19.22,"[17.99, 20.44]",0.0394
+Divergence_12M,Galvao,96,21.21,"[19.85, 22.58]",0.0394

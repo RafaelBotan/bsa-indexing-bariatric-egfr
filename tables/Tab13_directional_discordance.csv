@@ -1,0 +1,4 @@
+Cohort,N,N_discordant,Pct_discordant,CI95_lo,CI95_hi,N_both_up,N_both_down,N_reverse
+Arruda,154,67,43.5%,35.9%,51.4%,25,62,0
+Galvao,96,55,57.3%,47.3%,66.7%,5,36,0
+Combined,250,122,48.8%,42.7%,55.0%,30,98,0

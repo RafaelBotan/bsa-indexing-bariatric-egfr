@@ -1,0 +1,13 @@
+Cohort,N,Metric,Point_estimate,CI95_lo,CI95_hi,Boot_SE
+Arruda,154,Delta_NI,-16.19,-19.5,-12.84,1.7
+Arruda,154,Comp_eGFR,3.51,0.54,6.53,1.53
+Arruda,154,Comp_BSA,-19.7,-20.79,-18.61,0.56
+Arruda,154,Pct_BSA,84.87,74.79,97.18,5.63
+Galvao,96,Delta_NI,-18.7,-20.93,-16.45,1.15
+Galvao,96,Comp_eGFR,2.94,1.28,4.65,0.85
+Galvao,96,Comp_BSA,-21.63,-22.97,-20.3,0.67
+Galvao,96,Pct_BSA,88.05,82.11,94.46,3.1
+Pooled,250,Delta_NI,-17.15,-19.34,-14.97,1.13
+Pooled,250,Comp_eGFR,3.29,1.35,5.21,1.0
+Pooled,250,Comp_BSA,-20.44,-21.3,-19.61,0.43
+Pooled,250,Pct_BSA,86.14,79.56,93.83,3.69

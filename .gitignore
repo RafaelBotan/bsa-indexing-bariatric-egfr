@@ -1,0 +1,18 @@
+# Patient data — NEVER commit
+*.xlsx
+ESTUDO_C_DATASET_v4.csv
+SUPER_BASE_*.csv
+MEGA_BASE_*.csv
+RAFAEL_GALVAO_*.csv
+ADJUDICACAO_TIER2.csv
+MAPA_NOME_SEXO.csv
+
+# System files
+__pycache__/
+*.pyc
+.DS_Store
+Thumbs.db
+~$*
+
+# Large outputs
+*.docx

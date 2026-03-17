@@ -1,0 +1,15 @@
+Cohort,Window,N_with_Cr,N_real_date,N_DIAS,N_offset_only,Pct_real_date
+Arruda,PRE,731,322,727,4,44.0%
+Arruda,3M,385,217,383,2,56.4%
+Arruda,6M,248,93,247,1,37.5%
+Arruda,12M,431,166,428,3,38.5%
+Arruda,24M,303,0,303,0,0.0%
+Arruda,36M,213,0,213,0,0.0%
+Arruda,60M,305,0,305,0,0.0%
+Galvao,PRE,788,788,0,0,100.0%
+Galvao,3M,523,523,0,0,100.0%
+Galvao,6M,494,207,0,287,41.9%
+Galvao,12M,479,479,0,0,100.0%
+Galvao,24M,277,277,0,0,100.0%
+Galvao,36M,179,61,0,118,34.1%
+Galvao,60M,198,198,0,0,100.0%
