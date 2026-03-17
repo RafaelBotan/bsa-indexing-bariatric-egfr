@@ -3,6 +3,8 @@
 **Body surface area indexing can reverse the apparent direction of creatinine-based estimated glomerular filtration rate change 12 months after bariatric surgery**
 
 > Companion repository for the article submitted to *Nephrology Dialysis Transplantation* (NDT).
+>
+> **Authors:** Sergio Arruda, Rafael Oliveira Galvão, Rafael de Negreiros Botan, Larissa Bevilaqua Sampaio Contreiras, Erika Bevilaqua Rangel
 
 ## Summary
 
