@@ -26,7 +26,8 @@ BASE = 'Y:/Base Rafael do Sergio'
 DATASET = f'{BASE}/ESTUDO_C_DATASET_v4.csv'
 TABS = f'{BASE}/tabelas_v4'
 OUT_DIR = f'{BASE}/manuscrito'
-OUT_DOCX = f'{OUT_DIR}/estudo_c_manuscript_v8_COMPLETO.docx'
+_sub = os.environ.get('SUBMISSION_MODE', '0') == '1'
+OUT_DOCX = f'{OUT_DIR}/estudo_c_manuscript_SUBMISSION.docx' if _sub else f'{OUT_DIR}/estudo_c_manuscript_FINAL.docx'
 
 # ── Colors ──
 ARRUDA = '#2E86AB'
@@ -444,11 +445,25 @@ def add_para(doc, text, bold=False, italic=False, size=11, align=None):
     if align: p.alignment = align
     return p
 
-def add_figure(doc, path, caption, width=Inches(6)):
-    p = doc.add_paragraph(); p.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    run = p.add_run(); run.add_picture(path, width=width)
-    cap = doc.add_paragraph(); cap.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    run = cap.add_run(caption); run.font.size = Pt(9); run.italic = True
+SUBMISSION_MODE = os.environ.get('SUBMISSION_MODE', '0') == '1'
+
+def add_figure(doc, path, caption, width=Inches(6), alt_text=''):
+    if SUBMISSION_MODE:
+        # Text-only: insert placeholder instead of image
+        p = doc.add_paragraph(); p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        run = p.add_run('[Insert ' + caption.split('.')[0] + ' here]')
+        run.bold = True; run.font.size = Pt(10); run.font.color.rgb = RGBColor(150, 150, 150)
+        cap = doc.add_paragraph(); cap.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        run = cap.add_run(caption); run.font.size = Pt(9); run.italic = True
+    else:
+        p = doc.add_paragraph(); p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        run = p.add_run(); run.add_picture(path, width=width)
+        cap = doc.add_paragraph(); cap.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        run = cap.add_run(caption); run.font.size = Pt(9); run.italic = True
+        if alt_text:
+            alt_p = doc.add_paragraph()
+            alt_run = alt_p.add_run(f'Alt text: {alt_text}')
+            alt_run.font.size = Pt(8); alt_run.italic = True; alt_run.font.color.rgb = RGBColor(100,100,100)
     doc.add_paragraph()
 
 # ── TITLE ──
@@ -460,10 +475,10 @@ doc.add_paragraph()
 # Authors
 p = doc.add_paragraph(); p.alignment = WD_ALIGN_PARAGRAPH.CENTER
 authors = [
-    ('Larissa Bevilaqua Sampaio Contreiras', '1'),
+    ('Sergio Arruda', '1'),
+    ('Rafael Oliveira Galv\u00e3o', '1'),
     ('Rafael de Negreiros Botan', '2'),
-    ('Rafael Oliveira Galv\u00e3o', '3'),
-    ('Sergio Arruda', '3'),
+    ('Larissa Bevilaqua Sampaio Contreiras', '3'),
     ('Erika Bevilaqua Rangel', '4'),
 ]
 for i, (name, aff) in enumerate(authors):
@@ -478,9 +493,9 @@ for i, (name, aff) in enumerate(authors):
 # Affiliations
 doc.add_paragraph()
 affs = [
-    '\u00b9 Medical Student, Universidade Federal de S\u00e3o Paulo (UNIFESP), S\u00e3o Paulo, SP, Brazil',
+    '\u00b9 Bariatric Surgery, Private Practice, Bras\u00edlia, DF, Brazil',
     '\u00b2 Department of Oncology, Universidade de Bras\u00edlia, Bras\u00edlia, DF, Brazil',
-    '\u00b3 Bariatric Surgery, Private Practice, Bras\u00edlia, DF, Brazil',
+    '\u00b3 Medical Student, Universidade de Bras\u00edlia (UnB), Bras\u00edlia, DF, Brazil',
     '\u2074 Department of Medicine (Nephrology), Universidade Federal de S\u00e3o Paulo (UNIFESP), S\u00e3o Paulo, SP, Brazil',
 ]
 for aff in affs:
@@ -490,34 +505,20 @@ for aff in affs:
 doc.add_paragraph()
 p = doc.add_paragraph(); p.alignment = WD_ALIGN_PARAGRAPH.CENTER
 run = p.add_run('Corresponding author: '); run.font.size = Pt(9); run.bold = True
-run2 = p.add_run('Rafael de Negreiros Botan, MD, MSc \u2014 oncologista@gmail.com')
+run2 = p.add_run('Rafael de Negreiros Botan \u2014 oncologista@gmail.com')
 run2.font.size = Pt(9)
 
 add_para(doc, '\nRunning title: BSA indexing artifact after bariatric surgery', italic=True, size=10, align=WD_ALIGN_PARAGRAPH.CENTER)
-add_para(doc, 'Word count: ~3,400 (target: 3,500 for NDT Original Article)', italic=True, size=10, align=WD_ALIGN_PARAGRAPH.CENTER)
-
-doc.add_page_break()
-
-# ── KEY LEARNING POINTS ──
-add_heading(doc, 'Key Learning Points', level=2)
-for klp in [
-    'Standard indexed eGFR (mL/min/1.73 m\u00b2) rose by +3.2 mL/min at 12 months after Roux-en-Y gastric bypass, but absolute (nonindexed) eGFR fell by -17.2 mL/min over the same interval, producing clinically opposite conclusions about post-surgical kidney function trajectory.',
-    'Shapley decomposition attributed 86% [95% CI 80-94%] of the nonindexed eGFR decline to the change in body surface area alone, confirming that the discrepancy is primarily an algebraic rescaling artifact rather than a change in true glomerular filtration.',
-    'Clinicians and researchers interpreting eGFR after bariatric surgery should consider reporting both indexed and nonindexed values; exclusive reliance on indexed eGFR may mask a substantial decline in absolute renal function.',
-]:
-    doc.add_paragraph(klp, style='List Number')
-
-doc.add_paragraph()
 
 # ── ABSTRACT ──
 add_heading(doc, 'Abstract', level=2)
 
 p = doc.add_paragraph()
-run = p.add_run('Background and Aims. '); run.bold = True
+run = p.add_run('Background and hypothesis. '); run.bold = True
 p.add_run('We linked routinely collected clinical and laboratory data from two bariatric surgery cohorts in Brasilia, Brazil (2008-2024), to examine how body surface area (BSA) indexing changes the interpretation of creatinine-based estimated glomerular filtration rate (eGFR) trajectories 12 months after Roux-en-Y gastric bypass (RYGB). Because BSA falls substantially after surgery, this rescaling could distort or even reverse the apparent direction of eGFR change.')
 
 p = doc.add_paragraph()
-run = p.add_run('Method. '); run.bold = True
+run = p.add_run('Methods. '); run.bold = True
 p.add_run('We conducted a retrospective dual-cohort study using administrative and clinical data from two independent surgical practices sharing a single reference laboratory (Sabin). The discovery cohort (Arruda; N = 268 indexed, 154 nonindexed at 12 months) used national-ID linkage; the replication cohort (Galvao; N = 283 indexed, 96 nonindexed) used deterministic name linkage. eGFR was computed with the CKD-EPI 2021 race-free equation. Nonindexed eGFR was calculated as eGFR_indexed \u00d7 BSA_DuBois / 1.73. We decomposed the change in nonindexed eGFR using a Shapley-type bilinear identity, with 5,000-replicate stratified bootstrap confidence intervals.')
 
 p = doc.add_paragraph()
@@ -525,42 +526,79 @@ run = p.add_run('Results. '); run.bold = True
 p.add_run('In the discovery cohort, indexed eGFR rose (+3.60 [95% CI 1.48, 5.72]) while nonindexed eGFR fell (-16.19 [-19.49, -12.89]) at 12 months. An independent linked cohort replicated the marked nonindexed decline (-18.70 [-20.92, -16.47]) and large indexed-nonindexed divergence; after temporal validation, indexed change attenuated whereas nonindexed decline persisted. The BSA component accounted for 86.1% [79.6, 93.8] of the nonindexed decline. Nearly half of patients showed directional discordance (48.8% [42.7, 55.0]; 0% reverse pattern). Cohort-by-time interaction was non-significant (p = 0.83).')
 
 p = doc.add_paragraph()
-run = p.add_run('Conclusion. '); run.bold = True
-p.add_run('BSA indexing can reverse the apparent direction of creatinine-based eGFR change after RYGB. Reporting only indexed eGFR may falsely reassure clinicians about post-bariatric kidney function.')
+run = p.add_run('Conclusions. '); run.bold = True
+p.add_run('BSA indexing can reverse the apparent direction of creatinine-based eGFR change after RYGB. Reporting only indexed eGFR may understate the decline in nonindexed creatinine-based eGFR after surgery.')
+
+# ── GRAPHICAL ABSTRACT ──
+add_heading(doc, 'Graphical Abstract', level=2)
+ga_path = f'{OUT_DIR}/graphical_abstract.png'
+if os.path.exists(ga_path):
+    add_figure(doc, ga_path, 'Graphical Abstract. BSA indexing reverses the apparent direction of eGFR change after bariatric surgery.', width=Inches(6.5))
+
+doc.add_page_break()
+
+# ── KEY LEARNING POINTS (NDT format) ──
+add_heading(doc, 'Key Learning Points', level=2)
+
+p = doc.add_paragraph()
+run = p.add_run('What was known:'); run.bold = True
+doc.add_paragraph('Indexed eGFR normalises filtration to a fixed body surface area of 1.73 m\u00b2, but after bariatric surgery BSA falls substantially.', style='List Bullet')
+doc.add_paragraph('Existing studies predominantly report indexed eGFR, potentially masking the mechanical effect of BSA rescaling on apparent kidney function trajectories.', style='List Bullet')
+
+p = doc.add_paragraph()
+run = p.add_run('This study adds:'); run.bold = True
+doc.add_paragraph('In two independent RYGB cohorts sharing a single reference laboratory (N = 551 indexed, 250 nonindexed at 12 months), indexed eGFR rose (+3.2 mL/min) while nonindexed eGFR fell (\u221217.2 mL/min), producing clinically opposite conclusions.', style='List Bullet')
+doc.add_paragraph('Exact bilinear decomposition attributed 86% [95% CI 80\u201394%] of the nonindexed decline to BSA rescaling alone.', style='List Bullet')
+doc.add_paragraph('Nearly half of patients (48.8%) showed directional discordance; 0% showed the reverse pattern.', style='List Bullet')
+
+p = doc.add_paragraph()
+run = p.add_run('Potential impact:'); run.bold = True
+doc.add_paragraph('Clinicians and researchers interpreting eGFR after bariatric surgery should consider reporting both indexed and nonindexed values.', style='List Bullet')
+doc.add_paragraph('Exclusive reliance on indexed eGFR may provide a systematically optimistic picture of post-surgical kidney function trajectory.', style='List Bullet')
+
+doc.add_paragraph()
+
+# Keywords
+p = doc.add_paragraph()
+run = p.add_run('Keywords: '); run.bold = True
+p.add_run('GFR; CKD-EPI equation; creatinine; body surface area; gastric bypass')
 
 doc.add_page_break()
 
 # ── INTRODUCTION ──
 add_heading(doc, 'Introduction', level=2)
-add_para(doc, 'Bariatric surgery, particularly Roux-en-Y gastric bypass (RYGB), produces substantial and sustained weight loss, with well-documented improvements in type 2 diabetes, hypertension, and cardiovascular risk. The effect of bariatric surgery on kidney function, however, remains debated. Most studies report estimated glomerular filtration rate (eGFR) in its standard indexed form (mL/min/1.73 m\u00b2), which normalises filtration to a fixed body surface area (BSA) of 1.73 m\u00b2.')
-add_para(doc, 'This normalisation is unproblematic when body size is approximately average. After bariatric surgery, however, patients lose 25-40% of excess weight, and BSA falls by 0.25-0.40 m\u00b2 within the first year. Because nonindexed (absolute) eGFR equals indexed eGFR multiplied by (BSA / 1.73), a large drop in BSA mechanically reduces absolute eGFR even if indexed eGFR remains stable or rises. In principle, this rescaling could be large enough to reverse the apparent direction of eGFR change.')
-add_para(doc, 'Despite recognition of this issue in nephrology guidelines, no study has formally quantified the BSA indexing artifact after bariatric surgery in a large cohort, nor decomposed the relative contribution of true filtration change versus BSA rescaling.')
+add_para(doc, 'Bariatric surgery, particularly Roux-en-Y gastric bypass (RYGB), produces substantial and sustained weight loss, with well-documented improvements in type 2 diabetes, hypertension, and cardiovascular risk [1,2]. The effect of bariatric surgery on kidney function, however, remains debated [3,4,5]. Most studies report estimated glomerular filtration rate (eGFR) in its standard indexed form (mL/min/1.73 m\u00b2), which normalises filtration to a fixed body surface area (BSA) of 1.73 m\u00b2 [6,7].')
+add_para(doc, 'This normalisation is unproblematic when body size is approximately average [8,9]. After bariatric surgery, however, patients lose 25\u201340% of excess weight, and BSA falls by 0.25\u20130.40 m\u00b2 within the first year. Because nonindexed (absolute) eGFR equals indexed eGFR multiplied by (BSA / 1.73), a large drop in BSA mechanically reduces nonindexed eGFR even if indexed eGFR remains stable or rises. In principle, this rescaling could be large enough to reverse the apparent direction of eGFR change.')
+add_para(doc, 'Despite recognition of this issue in nephrology guidelines [6,8], no study has formally quantified the BSA indexing artifact after bariatric surgery in a large cohort, nor decomposed the relative contribution of the non-BSA creatinine-based component versus BSA rescaling.')
 add_para(doc, 'We addressed this gap in a dual-cohort discovery-replication design, using two independent RYGB cohorts sharing the same reference laboratory to (i) quantify the divergence between indexed and nonindexed eGFR at 12 months, (ii) decompose the nonindexed eGFR change into filtration and BSA components, and (iii) test whether the artifact is reproducible across independent surgical practices.')
 
-# ── METHODS ──
-add_heading(doc, 'Methods', level=2)
+# ── MATERIALS AND METHODS ──
+add_heading(doc, 'Materials and Methods', level=2)
 
 add_heading(doc, 'Study design and reporting', level=3)
-add_para(doc, 'This retrospective observational study used routinely collected clinical and laboratory data and followed the STROBE statement and RECORD extension for studies conducted using routinely collected health data. The study was registered at the Open Science Framework prior to submission.')
+add_para(doc, 'This retrospective observational study used routinely collected clinical and laboratory data and followed the STROBE statement [10] and RECORD extension [11] for studies conducted using routinely collected health data. The study was registered at the Open Science Framework prior to submission (https://osf.io/9r5w7/).')
+
+add_heading(doc, 'Ethics', level=3)
+add_para(doc, 'This study was approved by the Research Ethics Committee (Comit\u00ea de \u00c9tica em Pesquisa) of Universidade Federal de S\u00e3o Paulo (UNIFESP) under CAAE [A PREENCHER], project title "Impacto da cirurgia bari\u00e1trica nos desfechos cardiorrenais metab\u00f3licos." Informed consent was waived because the study involved secondary use of existing de-identified clinical and laboratory records without direct participant contact. Linkage identifiers (national ID and names) were used solely for deterministic matching and were removed before analysis.')
 
 add_heading(doc, 'Data sources and linkage', level=3)
 add_para(doc, 'Two independent surgical practices in Brasilia, DF, Brazil, contributed data. Both practices use Sabin Laboratorios as their reference laboratory, enabling standardised creatinine measurements across cohorts.')
 p = doc.add_paragraph(); run = p.add_run('Discovery cohort (Arruda). '); run.bold = True
 p.add_run('The Arruda cohort comprised 1,869 consecutive RYGB patients. Surgical technique was confirmed as 100% RYGB by the operating surgeon. Laboratory data were linked to clinical records using the Brazilian national identifier (CPF), providing gold-standard deterministic linkage. Sex was recorded in clinical charts with 100% coverage.')
 p = doc.add_paragraph(); run = p.add_run('Replication cohort (Galvao). '); run.bold = True
-p.add_run('The Galvao cohort comprised 10,872 patients. Laboratory data were linked using hierarchical deterministic name linkage: exact normalised-name match (tier 1; N = 2,281) and birth-year disambiguation of homonymous names (tier 2; N = 19, all manually reviewed). Patients were filtered to bypass procedures (98.5% of cohort). Sex was inferred from first names using a validated catalogue of 2,782 Brazilian names.')
+p.add_run('The Galvao cohort comprised 10,872 patients. Laboratory data were linked using hierarchical deterministic name linkage: exact normalised-name match (tier 1; N = 2,281) and birth-year disambiguation of homonymous names (tier 2; N = 19, all manually reviewed). Patients were filtered to RYGB (98.5% of cohort; the remaining 1.5% were sleeve gastrectomy or adjustable band and were excluded). Sex was inferred from first names using a validated catalogue of 2,782 Brazilian names. Body weight was extracted from standardised free-text follow-up notes using prespecified numeric patterns; ambiguous values were excluded, and no weight imputation was performed.')
 
 add_heading(doc, 'Study population', level=3)
-add_para(doc, 'The analytical dataset included patients with: (i) confirmed RYGB; (ii) defined sex; (iii) known date of birth; and (iv) at least one valid serum creatinine. The final dataset comprised 3,254 patients (1,869 Arruda; 1,385 Galvao).')
+add_para(doc, 'The analytical dataset included patients with: (i) confirmed RYGB in both cohorts; (ii) defined sex; (iii) known date of birth; and (iv) at least one valid serum creatinine. The final dataset comprised 3,254 RYGB patients (1,869 Arruda; 1,385 Galvao).')
 
 add_heading(doc, 'Measurements and definitions', level=3)
-add_para(doc, 'eGFR (indexed) was calculated using the CKD-EPI 2021 race-free equation. Serum creatinine values outside 0.20-5.0 mg/dL were excluded. BSA was calculated using the DuBois formula; sensitivity analysis used the Mosteller formula. Nonindexed eGFR was calculated as eGFR_indexed \u00d7 BSA_DuBois / 1.73, requiring observed weight at both time points (no imputation). Pre-operative creatinine: closest to surgery within -365 to -1 days. 12-month window: 301-548 days. Age at examination used a three-tier priority system (actual date, days offset, age-at-surgery plus window offset; maximum error 0.045 years).')
+add_para(doc, 'eGFR (indexed) was calculated using the CKD-EPI 2021 race-free equation [12]. Serum creatinine values outside 0.20\u20135.0 mg/dL were excluded [13]. BSA was calculated using the DuBois formula [14]; sensitivity analysis used the Mosteller formula [15]. Nonindexed eGFR was calculated as eGFR_indexed \u00d7 BSA_DuBois / 1.73, requiring observed weight at both time points (no imputation) [8]. Pre-operative creatinine: closest to surgery within \u2212365 to \u22121 days. 12-month window: 301\u2013548 days. Age at examination used a three-tier priority system (actual date, days offset, age-at-surgery plus window offset; maximum error 0.045 years).')
 
 add_heading(doc, 'Shapley decomposition', level=3)
-add_para(doc, 'We decomposed the change in nonindexed eGFR into two additive components using the bilinear Shapley identity: \u0394eGFR_NI = [\u0394eGFR_idx \u00d7 mean(BSA)/1.73] + [mean(eGFR_idx) \u00d7 \u0394BSA/1.73]. This decomposition is algebraically exact (zero residual). Bootstrap 95% CIs used 5,000 patient-level replicates, stratified by cohort in pooled analyses.')
+add_para(doc, 'We decomposed the change in nonindexed eGFR into two additive components using the bilinear Shapley identity [16]: \u0394eGFR_NI = [\u0394eGFR_idx \u00d7 mean(BSA)/1.73] + [mean(eGFR_idx) \u00d7 \u0394BSA/1.73]. This decomposition is algebraically exact (zero residual). Bootstrap 95% CIs used 5,000 patient-level replicates [17], stratified by cohort in pooled analyses.')
 
 add_heading(doc, 'Statistical analysis', level=3)
-add_para(doc, 'Within-person changes were tested with paired t-tests. A linear mixed-effects model with restricted cubic spline (3 knots at 10th/50th/90th percentiles) and random intercept per patient assessed temporal trajectory and cohort homogeneity. Sensitivity analyses included: sex-stratified, BMI-stratified, BSA formula (Mosteller), creatinine range (0.4-3.0), pre-operative window restriction (-180d, -90d), tight 12-month window (365\u00b145d), and date-validated Galvao subset. All analyses used Python 3.13.')
+add_para(doc, 'Within-person changes were tested with paired t-tests. A linear mixed-effects model with restricted cubic spline (3 knots at 10th/50th/90th percentiles) and random intercept per patient assessed temporal trajectory and cohort homogeneity. Sensitivity analyses included: sex-stratified, BMI-stratified, BSA formula (Mosteller), creatinine range (0.4-3.0), pre-operative window restriction (-180d, -90d), tight 12-month window (365\u00b145d), and date-validated Galvao subset. Primary inferential claims were anchored in the discovery cohort; replication and pooled analyses were prespecified as supportive. All analyses used Python 3.13.')
 
 doc.add_page_break()
 
@@ -568,7 +606,7 @@ doc.add_page_break()
 add_heading(doc, 'Results', level=2)
 
 # Figure 1
-add_figure(doc, fig1_path, 'Figure 1. Study flow diagram (STROBE/RECORD).', width=Inches(6.5))
+add_figure(doc, fig1_path, 'Figure 1. Study flow diagram (STROBE/RECORD).', width=Inches(6.5), alt_text='STROBE flow diagram showing patient selection from two independent surgical cohorts through quality filters to final analytical samples of 551 indexed and 250 nonindexed paired measurements at 12 months.')
 
 # Table 1
 add_heading(doc, 'Baseline characteristics', level=3)
@@ -609,26 +647,26 @@ doc.add_paragraph()
 
 # Primary analysis
 add_heading(doc, 'Primary analysis: 12-month paired changes', level=3)
-add_para(doc, 'In the discovery cohort (Arruda), indexed eGFR rose by +3.60 mL/min/1.73 m\u00b2 [95% CI 1.48, 5.72; p = 1.0 \u00d7 10\u207b\u00b3] while nonindexed eGFR fell by -16.19 mL/min [-19.49, -12.89; p = 2.0 \u00d7 10\u207b\u00b9\u2077]. The replication cohort (Galvao) confirmed the marked nonindexed decline (-18.70 [-20.92, -16.47; p = 1.4 \u00d7 10\u207b\u00b2\u2079]) and large indexed-nonindexed divergence (21.21 mL/min). In the full replication sample, indexed eGFR also rose (+2.80 [1.74, 3.86]); however, when restricted to date-validated 12-month measurements (301-548 days, N = 48), indexed change attenuated to near zero (\u00b10.06, p = 0.96) while nonindexed decline persisted (-18.94 [-22.61, -15.28]). Interaction p-values were non-significant for both indexed (0.50) and nonindexed (0.28) endpoints.')
+add_para(doc, 'In the discovery cohort (Arruda), indexed eGFR rose by +3.60 mL/min/1.73 m\u00b2 [95% CI 1.48, 5.72; p = 1.0 \u00d7 10\u207b\u00b3] while nonindexed eGFR fell by -16.19 mL/min [-19.49, -12.89; p = 2.0 \u00d7 10\u207b\u00b9\u2077]. The replication cohort (Galvao) confirmed the marked nonindexed decline (-18.70 [-20.92, -16.47; p = 1.4 \u00d7 10\u207b\u00b2\u2079]) and large indexed-nonindexed divergence (21.21 mL/min). In the full replication sample, indexed eGFR also rose (+2.80 [1.74, 3.86]); however, when restricted to date-validated 12-month measurements (301-548 days, N = 48), indexed change attenuated to near zero (\u22120.06, p = 0.96) while nonindexed decline persisted (-18.94 [-22.61, -15.28]). Interaction p-values were non-significant for both indexed (0.50) and nonindexed (0.28) endpoints.')
 
 # Shapley
 add_heading(doc, 'Shapley decomposition', level=3)
-add_figure(doc, fig2_path, 'Figure 2. Shapley decomposition of nonindexed eGFR change at 12 months. The BSA component (orange) dominates; the eGFR component (blue) is small and positive. Error bars: 5,000-replicate bootstrap 95% CIs.', width=Inches(5.5))
+add_figure(doc, fig2_path, 'Figure 2. Shapley decomposition of nonindexed eGFR change at 12 months. The BSA component (orange) dominates; the eGFR component (blue) is small and positive. Error bars: 5,000-replicate bootstrap 95% CIs.', width=Inches(5.5), alt_text='Grouped bar chart showing Shapley decomposition with eGFR component (blue, small positive) and BSA component (orange, large negative) for Arruda, Galvao, and Pooled cohorts. BSA percentages labeled above bars: 85%, 88%, 86%.')
 add_para(doc, 'The BSA component accounted for 84.9% [74.8, 97.2] of the nonindexed decline in Arruda, 88.1% [82.1, 94.5] in Galvao, and 86.1% [79.6, 93.8] pooled (Figure 2). The non-BSA creatinine-based component was small and positive in both cohorts.')
 
 # Discordance
 add_heading(doc, 'Directional discordance', level=3)
-add_figure(doc, fig3_path, 'Figure 3. Forest plot of 12-month paired changes (left) with directional discordance classification (right). Red = discordant (idx up, NI down); blue = both up; grey = both down; green = reverse (0%).', width=Inches(6))
+add_figure(doc, fig3_path, 'Figure 3. Forest plot of 12-month paired changes (left) with directional discordance classification (right). Red = discordant (idx up, NI down); blue = both up; grey = both down; green = reverse (0%).', width=Inches(6), alt_text='Left panel: forest plot with diamond markers showing indexed eGFR increase and nonindexed eGFR decrease at 12 months for both cohorts and pooled. Right panel: stacked bar chart showing 48.8% directional discordance with 0% reverse pattern.')
 add_para(doc, 'Nearly half of patients showed directional discordance: 48.8% [95% CI 42.7, 55.0] had indexed eGFR increase with simultaneous nonindexed eGFR decrease (Figure 3). No patient (0/250) showed the reverse pattern. Discordance was consistent across cohorts (Arruda 43.5%, Galvao 57.3%).')
 
 # Dose-response
 add_heading(doc, 'Dose-response relationship', level=3)
-add_figure(doc, fig4_path, 'Figure 4. Dose-response: BSA change (A) and weight loss (B) versus indexed-nonindexed divergence at 12 months. R\u00b2 = 0.72 confirms proportional algebraic mechanism.', width=Inches(6))
+add_figure(doc, fig4_path, 'Figure 4. Dose-response: BSA change (A) and weight loss (B) versus indexed\u2013nonindexed divergence at 12 months. R\u00b2 = 0.72, highly consistent with a proportional algebraic mechanism.', width=Inches(6), alt_text='Two scatter plots showing monotonic relationship between BSA change and indexed-nonindexed divergence (R-squared 0.72) and between weight loss and divergence, with regression lines.')
 add_para(doc, 'The divergence showed a strong monotonic relationship with BSA change (Spearman rho = -0.83, p < 10\u207b\u2076\u2074; R\u00b2 = 0.72) (Figure 4), consistent with an algebraic mechanism.')
 
 # G-category
 add_heading(doc, 'G-category stability', level=3)
-add_para(doc, 'At 12 months, 89.1% of patients (491/551) maintained their pre-operative G-category, 9.4% improved, and 1.5% worsened. This pattern was stable through 60 months (90.8% stable, 3.1% worsened).')
+add_para(doc, 'At 12 months, 89.1% of patients (491/551) maintained their pre-operative G-category [6], 9.4% improved, and 1.5% worsened. In exploratory longer-term follow-up (N = 130 at 60 months), the pattern remained similar (90.8% stable, 3.1% worsened), although these estimates should be interpreted cautiously given the smaller sample.')
 
 # LME
 add_heading(doc, 'Longitudinal mixed-effects model', level=3)
@@ -648,12 +686,12 @@ add_heading(doc, 'Mechanism', level=3)
 add_para(doc, 'The Shapley decomposition provides formal confirmation of the algebraic mechanism. At 12 months, 86% of the nonindexed decline is explained by the BSA component alone. The non-BSA creatinine-based component was small and positive \u2014 though this should be interpreted cautiously, as creatinine production may also change after major weight loss due to altered muscle mass.')
 
 add_heading(doc, 'Clinical implications', level=3)
-add_para(doc, 'The practical consequence is straightforward: a clinician reviewing indexed eGFR after bariatric surgery sees +3 mL/min ("stable or improving") while absolute renal function has fallen by 17 mL/min. This is not a statistical curiosity \u2014 it affects individual clinical decisions. Nearly half of patients had clinically opposite trajectories, and no patient showed the reverse pattern.')
-add_para(doc, 'We do not argue that nonindexed eGFR is the correct metric for drug dosing or staging; this remains an area of active debate. Rather, we demonstrate that exclusive reliance on indexed eGFR after bariatric surgery provides a systematically optimistic picture that clinicians should be aware of.')
+add_para(doc, 'The practical consequence is straightforward: a clinician reviewing indexed eGFR after bariatric surgery sees +3 mL/min ("stable or improving") while nonindexed creatinine-based eGFR has fallen by approximately 17 mL/min. This is not a statistical curiosity \u2014 it affects individual clinical decisions. Nearly half of patients had clinically opposite trajectories, and no patient showed the reverse pattern.')
+add_para(doc, 'We do not argue that nonindexed eGFR is the correct metric for drug dosing or staging; this remains an area of active debate [6,7]. Rather, we demonstrate that exclusive reliance on indexed eGFR after RYGB provides a systematically optimistic picture that clinicians should be aware of.')
 
 add_heading(doc, 'Strengths and limitations', level=3)
 add_para(doc, 'Strengths include the dual-cohort design with independent discovery and replication, shared laboratory standardisation, large sample size, formal algebraic decomposition with bootstrap inference, and comprehensive sensitivity analyses.')
-add_para(doc, 'Limitations include the absence of cystatin C-based or measured GFR, which precludes assessment of whether the creatinine-based filtration estimate itself reflects true filtration change. Albuminuria data were essentially absent, limiting classification to G-categories. In the Galvao cohort, temporal window assignment showed some misclassification (31.7% of pre-operative dates were post-surgical), although date-validated sensitivity analysis substantially mitigated this concern (date availability remained incomplete: 104/283 with real dates, 17 nonindexed pairs in the nominal window). In the Arruda cohort, weight and laboratory data were captured within the same scheduled follow-up encounter; in the Galvao cohort, a modest lag between measurements cannot be excluded, although it is unlikely to explain a divergence of approximately 20 mL/min.')
+add_para(doc, 'Limitations include the absence of cystatin C-based or measured GFR [6,7], which precludes assessment of whether the creatinine-based estimate itself reflects true filtration change. Albuminuria data were essentially absent, limiting classification to G-categories [6]. In the Galvao cohort, perioperative baseline misclassification remained possible (31.7% of pre-operative dates were post-surgical), although date-validated sensitivity analysis in a small date-validated replication subset substantially mitigated this concern (date availability remained incomplete: 104/283 with real dates, 17 nonindexed pairs in the nominal window). In the Arruda cohort, weight and laboratory data were captured within the same scheduled follow-up encounter; in the Galvao cohort, a modest lag between measurements cannot be excluded, although it is unlikely to explain a divergence of approximately 20 mL/min.')
 add_para(doc, 'Reported comorbidity prevalence differed markedly between cohorts, likely reflecting ascertainment heterogeneity across source systems; because the primary endpoint was within-person change in creatinine-based eGFR under alternative BSA scaling, these variables were not used to define or compute the primary outcome.')
 
 add_heading(doc, 'Conclusion', level=3)
@@ -661,38 +699,51 @@ add_para(doc, 'BSA indexing can reverse the apparent direction of creatinine-bas
 
 doc.add_page_break()
 
-# ── ACKNOWLEDGMENTS ──
-add_heading(doc, 'Acknowledgments', level=2)
+# ── ACKNOWLEDGEMENTS ──
+add_heading(doc, 'Acknowledgements', level=2)
 add_para(doc, 'We thank Sabin Laboratorios (Brasilia, DF, Brazil) for providing standardised laboratory data. Artificial intelligence tools (Claude, Anthropic) were used to assist with data pipeline development, statistical code review, and manuscript formatting; all clinical interpretations and scientific content were generated and verified by the authors.')
-add_para(doc, 'Funding: None.')
-add_para(doc, 'Conflict of interest statement: The authors declare no conflicts of interest.')
+
+# ── CONFLICT OF INTEREST STATEMENT ──
+add_heading(doc, 'Conflict of Interest Statement', level=2)
+add_para(doc, 'The authors declare no conflicts of interest.')
+
+# ── AUTHORS' CONTRIBUTIONS ──
+add_heading(doc, "Authors' Contributions", level=2)
+add_para(doc, 'SA conceived the study, provided the discovery cohort data, and critically reviewed the manuscript. ROG provided the replication cohort data, performed the tier-2 adjudication, and critically reviewed the manuscript. RNB designed the analysis, performed all statistical analyses, wrote the first draft, and is the guarantor of the work. LBSC contributed to data collection and organisation. EBR provided methodological supervision and critically reviewed the manuscript. All authors approved the final version.')
+
+# ── FUNDING ──
+add_heading(doc, 'Funding', level=2)
+add_para(doc, 'None.')
+
+# ── DATA AVAILABILITY STATEMENT ──
+add_heading(doc, 'Data Availability Statement', level=2)
+add_para(doc, 'De-identified individual-level data are not publicly available because of privacy restrictions under the Brazilian General Data Protection Law (LGPD) and contractual restrictions involving the participating practices and laboratory. Analysis code and aggregated results are publicly available at https://github.com/RafaelBotan/bsa-indexing-bariatric-egfr and registered at https://osf.io/9r5w7/. Additional de-identified aggregate outputs may be available from the corresponding author on reasonable request and with permission from the data holders.')
 
 doc.add_page_break()
 
 # ── REFERENCES ──
 add_heading(doc, 'References', level=2)
 
+# References renumbered by order of appearance (NDT requirement). Refs [8],[17],[18] removed (not cited).
+# Mapping: old→new: 14→1, 15→2, 9→3, 10→4, 11→5, 4→6, 13→7, 7→8, 16→9, 5→10, 6→11, 1→12, 19→13, 2→14, 3→15, 12→16, 20→17
 references = [
-    '1. Inker LA, Eneanya ND, Coresh J, et al. New creatinine- and cystatin C-based equations to estimate GFR without race. N Engl J Med. 2021;385(19):1737-1749. doi:10.1056/NEJMoa2102953',
-    '2. Du Bois D, Du Bois EF. A formula to estimate the approximate surface area if height and weight be known. Arch Intern Med. 1916;17(6_2):863-871. doi:10.1001/archinte.1916.00080130010002',
-    '3. Mosteller RD. Simplified calculation of body-surface area. N Engl J Med. 1987;317(17):1098. doi:10.1056/NEJM198710223171717',
-    '4. KDIGO 2024 clinical practice guideline for the evaluation and management of chronic kidney disease. Kidney Int. 2024;105(4S):S117-S314. doi:10.1016/j.kint.2023.10.018',
-    '5. von Elm E, Altman DG, Egger M, et al. The Strengthening the Reporting of Observational Studies in Epidemiology (STROBE) statement: guidelines for reporting observational studies. Lancet. 2007;370(9596):1453-1457. doi:10.1016/S0140-6736(07)61602-X',
-    '6. Benchimol EI, Smeeth L, Guttmann A, et al. The REporting of studies Conducted using Observational Routinely-collected health Data (RECORD) statement. PLoS Med. 2015;12(10):e1001885. doi:10.1371/journal.pmed.1001885',
-    '7. Delanaye P, Radermecker RP, Rorive M, Depas G, Krzesinski JM. Indexing glomerular filtration rate for body surface area in obese patients is misleading: concept and example. Nephrol Dial Transplant. 2005;20(10):2024-2028. doi:10.1093/ndt/gfh983',
-    '8. Nair S, Mishra V, Hayden K, et al. Effect of sleeve gastrectomy on renal function. Surg Obes Relat Dis. 2018;14(10):1575-1580. doi:10.1016/j.soard.2018.07.016',
-    '9. Chang AR, Chen Y, Still C, et al. Bariatric surgery is associated with improvement in kidney outcomes. Kidney Int. 2016;90(1):164-171. doi:10.1016/j.kint.2016.02.039',
-    '10. Friedman AN, Moe S, Gao D, et al. Measured and estimated glomerular filtration rate after bariatric surgery. J Ren Nutr. 2023;33(1):94-101. doi:10.1053/j.jrn.2022.03.003',
-    '11. Lieske JC, Collazo-Clavell ML, Engstrom BI, et al. Measured GFR and kidney outcomes after bariatric surgery. Clin J Am Soc Nephrol. 2024;19(3):305-313. doi:10.2215/CJN.0000000000000375',
-    '12. Shapley LS. A value for n-person games. In: Kuhn HW, Tucker AW, eds. Contributions to the Theory of Games II. Princeton University Press; 1953:307-317. doi:10.1515/9781400881970-018',
-    '13. Levey AS, Coresh J, Tighiouart H, Greene T, Inker LA. Measured and estimated glomerular filtration rate: current status and future directions. Nat Rev Nephrol. 2020;16(1):51-64. doi:10.1038/s41581-019-0191-y',
-    '14. Buchwald H, Avidor Y, Braunwald E, et al. Bariatric surgery: a systematic review and meta-analysis. JAMA. 2004;292(14):1724-1737. doi:10.1001/jama.292.14.1724',
-    '15. Sjostrom L. Review of the key results from the Swedish Obese Subjects (SOS) trial. J Intern Med. 2013;273(3):219-234. doi:10.1111/joim.12012',
-    '16. Delanaye P, Mariat C, Cavalier E, Maillard N, Krzesinski JM, White CA. Indexation of renal function parameters by body surface area: intelligence or These? Nephrol Ther. 2009;5(Suppl 4):S213-218. doi:10.1016/S1769-7255(09)74545-3',
-    '17. Patel SS, Molnar MZ, Engstrom BI, et al. Kidney function in the super-obese before and after bariatric surgery. Am J Kidney Dis. 2022;80(4):463-472. doi:10.1053/j.ajkd.2022.02.015',
-    '18. Heymsfield SB, Lichtman S, Baumgartner RN, et al. Body composition of humans: comparison of two improved four-compartment models that differ in expense, technical complexity, and radiation exposure. Am J Clin Nutr. 1990;52(1):52-58. doi:10.1093/ajcn/52.1.52',
-    '19. Earley A, Miskulin D, Lamb EJ, Levey AS, Uhlig K. Estimating equations for glomerular filtration rate in the era of creatinine standardization: a systematic review. Ann Intern Med. 2012;156(11):785-795. doi:10.7326/0003-4819-156-6-201203200-00391',
-    '20. Efron B, Tibshirani RJ. An Introduction to the Bootstrap. Chapman & Hall/CRC; 1993.',
+    '1. Buchwald H, Avidor Y, Braunwald E, et al. Bariatric surgery: a systematic review and meta-analysis. JAMA. 2004;292(14):1724-1737. doi:10.1001/jama.292.14.1724',
+    '2. Sjostrom L. Review of the key results from the Swedish Obese Subjects (SOS) trial. J Intern Med. 2013;273(3):219-234. doi:10.1111/joim.12012',
+    '3. Chang AR, Chen Y, Still C, et al. Bariatric surgery is associated with improvement in kidney outcomes. Kidney Int. 2016;90(1):164-171. doi:10.1016/j.kint.2016.02.039',
+    '4. Friedman AN, Moe S, Gao D, et al. Measured and estimated glomerular filtration rate after bariatric surgery. J Ren Nutr. 2023;33(1):94-101. doi:10.1053/j.jrn.2022.03.003',
+    '5. Lieske JC, Collazo-Clavell ML, Engstrom BI, et al. Measured GFR and kidney outcomes after bariatric surgery. Clin J Am Soc Nephrol. 2024;19(3):305-313. doi:10.2215/CJN.0000000000000375',
+    '6. KDIGO 2024 clinical practice guideline for the evaluation and management of chronic kidney disease. Kidney Int. 2024;105(4S):S117-S314. doi:10.1016/j.kint.2023.10.018',
+    '7. Levey AS, Coresh J, Tighiouart H, Greene T, Inker LA. Measured and estimated glomerular filtration rate: current status and future directions. Nat Rev Nephrol. 2020;16(1):51-64. doi:10.1038/s41581-019-0191-y',
+    '8. Delanaye P, Radermecker RP, Rorive M, Depas G, Krzesinski JM. Indexing glomerular filtration rate for body surface area in obese patients is misleading: concept and example. Nephrol Dial Transplant. 2005;20(10):2024-2028. doi:10.1093/ndt/gfh983',
+    '9. Delanaye P, Mariat C, Cavalier E, Maillard N, Krzesinski JM, White CA. Indexation of renal function parameters by body surface area: intelligence or These? Nephrol Ther. 2009;5(Suppl 4):S213-218. doi:10.1016/S1769-7255(09)74545-3',
+    '10. von Elm E, Altman DG, Egger M, et al. The Strengthening the Reporting of Observational Studies in Epidemiology (STROBE) statement: guidelines for reporting observational studies. Lancet. 2007;370(9596):1453-1457. doi:10.1016/S0140-6736(07)61602-X',
+    '11. Benchimol EI, Smeeth L, Guttmann A, et al. The REporting of studies Conducted using Observational Routinely-collected health Data (RECORD) statement. PLoS Med. 2015;12(10):e1001885. doi:10.1371/journal.pmed.1001885',
+    '12. Inker LA, Eneanya ND, Coresh J, et al. New creatinine- and cystatin C-based equations to estimate GFR without race. N Engl J Med. 2021;385(19):1737-1749. doi:10.1056/NEJMoa2102953',
+    '13. Earley A, Miskulin D, Lamb EJ, Levey AS, Uhlig K. Estimating equations for glomerular filtration rate in the era of creatinine standardization: a systematic review. Ann Intern Med. 2012;156(11):785-795. doi:10.7326/0003-4819-156-6-201203200-00391',
+    '14. Du Bois D, Du Bois EF. A formula to estimate the approximate surface area if height and weight be known. Arch Intern Med. 1916;17(6_2):863-871. doi:10.1001/archinte.1916.00080130010002',
+    '15. Mosteller RD. Simplified calculation of body-surface area. N Engl J Med. 1987;317(17):1098. doi:10.1056/NEJM198710223171717',
+    '16. Shapley LS. A value for n-person games. In: Kuhn HW, Tucker AW, eds. Contributions to the Theory of Games II. Princeton University Press; 1953:307-317. doi:10.1515/9781400881970-018',
+    '17. Efron B, Tibshirani RJ. An Introduction to the Bootstrap. Chapman & Hall/CRC; 1993.',
 ]
 
 for ref in references:
@@ -709,6 +760,7 @@ doc.add_page_break()
 add_heading(doc, 'Supplementary Material', level=1)
 
 add_para(doc, 'Analysis code and aggregated results are publicly available at: https://github.com/RafaelBotan/bsa-indexing-bariatric-egfr', size=10)
+add_para(doc, 'Pre-registration: https://osf.io/9r5w7/', size=10)
 doc.add_paragraph()
 
 # S-Table 1: LME coefficients

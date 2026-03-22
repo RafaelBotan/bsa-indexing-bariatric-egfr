@@ -96,6 +96,16 @@ This study is registered on the Open Science Framework: https://osf.io/9r5w7/
 Code: MIT License
 Data/Results: CC-BY 4.0
 
+## DOI
+
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.XXXXXXX.svg)](https://doi.org/10.5281/zenodo.XXXXXXX)
+
+*DOI will be assigned upon Zenodo release. Update the badge above after linking.*
+
 ## Citation
 
-[To be updated upon publication]
+Arruda S, Galvao RO, Botan RN, Contreiras LBS, Rangel EB. Body surface area indexing can reverse the apparent direction of creatinine-based estimated glomerular filtration rate change 12 months after bariatric surgery. *Nephrol Dial Transplant*. 2026. [Submitted]
+
+## AI Disclosure
+
+Artificial intelligence tools (Claude, Anthropic) were used to assist with data pipeline development, statistical code review, and manuscript formatting. All clinical interpretations and scientific content were generated and verified by the authors.
