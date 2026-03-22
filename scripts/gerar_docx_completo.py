@@ -69,8 +69,8 @@ def save_fig(fig, name):
 
 # ── Figure 1: Flowchart ──
 print("Main figures:")
-fig, ax = plt.subplots(figsize=(11, 13))
-ax.set_xlim(0, 100); ax.set_ylim(0, 100); ax.axis('off')
+fig, ax = plt.subplots(figsize=(11, 15))
+ax.set_xlim(0, 100); ax.set_ylim(15, 100); ax.axis('off')
 
 def box(ax, x, y, w, h, text, fc='#E8F4FD', fs=7.5, bold=False):
     rect = mpatches.FancyBboxPatch((x-w/2, y-h/2), w, h, boxstyle='round,pad=0.3',
@@ -104,8 +104,8 @@ arrow(ax, 75, 86.75, 75, 84.25)
 box(ax, 75, 81.5, 24, 4.5, 'Sabin laboratory\nN = 6,236 patients', fc='#F8E8F6', fs=7)
 arrow(ax, 75, 79.25, 75, 76.75)
 box(ax, 75, 74, 24, 5.5, 'Name linkage:\nTier 1 exact: 2,281\nTier 2 homonym: 19\nTotal: 2,300', fc='#F8E8F6', fs=7)
-box(ax, 97, 74, 6, 4.5, 'Tier 3: 368\nTier 4: 581\n(sensitivity)', fc='#FDE8E8', fs=5.5)
-ax.annotate('', xy=(94, 74), xytext=(87, 74), arrowprops=dict(arrowstyle='->', color='#999', linewidth=1))
+box(ax, 95, 74, 6, 4.5, 'Tier 3: 368\nTier 4: 581\n(sensitivity)', fc='#FDE8E8', fs=5.5)
+ax.annotate('', xy=(92, 74), xytext=(87, 74), arrowprops=dict(arrowstyle='->', color='#999', linewidth=1))
 arrow(ax, 75, 71.25, 75, 68.75)
 box(ax, 75, 66, 24, 4.5, 'Bypass + quality filters\nN = 1,385', fc='#F8E8F6', fs=7)
 arrow(ax, 75, 63.75, 75, 61.25)
@@ -147,7 +147,8 @@ ax.axhline(0, color='black', linewidth=0.5); ax.legend(framealpha=0.95, loc='low
 ax.set_title('Shapley Decomposition of Nonindexed eGFR Change at 12 Months')
 for i, (e, b) in enumerate(zip(egfr_vals, bsa_vals)):
     pct = abs(b)/(abs(e)+abs(b))*100
-    ax.text(i, 5.5, f'BSA: {pct:.0f}%', ha='center', fontsize=9, fontweight='bold', color=POOLED)
+    # Place label inside the negative BSA bar, vertically centered
+    ax.text(i+w/2, b/2, f'BSA\n{pct:.0f}%', ha='center', va='center', fontsize=9, fontweight='bold', color='white')
 plt.tight_layout()
 fig2_path = save_fig(fig, 'fig2_shapley')
 
@@ -167,9 +168,9 @@ for i, (label, mean, lo, hi, color) in enumerate(endpoints):
     if np.isnan(mean): continue
     ax1.errorbar(mean, y_pos[i], xerr=[[mean-lo], [hi-mean]], fmt='D', color=color,
                  markersize=8, capsize=4, capthick=1.5, linewidth=1.5)
-    ax1.text(-25, y_pos[i], label, va='center', ha='right', fontsize=8, color=color)
+    ax1.text(-26, y_pos[i], label, va='center', ha='right', fontsize=8, color=color)
 ax1.axvline(0, color='black', linewidth=0.8); ax1.set_xlabel('Mean change (mL/min)')
-ax1.set_xlim(-25, 10); ax1.set_yticks([]); ax1.set_title('12-Month Paired Changes')
+ax1.set_xlim(-27, 10); ax1.set_yticks([]); ax1.set_title('12-Month Paired Changes')
 ax1.axhspan(2.5, 6.5, alpha=0.05, color='green'); ax1.axhspan(-0.5, 2.5, alpha=0.05, color='red')
 
 colors_disc = ['#E74C3C', '#3498DB', '#95A5A6', '#2ECC71']
@@ -295,8 +296,9 @@ ax.bar(x, improved, bottom=stable, color='#3498DB', label='Improved', edgecolor=
 ax.bar(x, worsened, bottom=[s+i for s,i in zip(stable, improved)], color='#E74C3C', label='Worsened', edgecolor='white')
 
 for i, (s, im, w, n) in enumerate(zip(stable, improved, worsened, ns)):
-    ax.text(i, s/2, f'{s:.0f}%', ha='center', va='center', fontsize=9, fontweight='bold', color='white')
-    if w > 1.5: ax.text(i, s+im+w/2, f'{w:.1f}%', ha='center', va='center', fontsize=7, color='white')
+    if s > 8: ax.text(i, s/2, f'{s:.0f}%', ha='center', va='center', fontsize=9, fontweight='bold', color='white')
+    if im > 5: ax.text(i, s+im/2, f'{im:.0f}%', ha='center', va='center', fontsize=7, color='white')
+    if w > 3: ax.text(i, s+im+w/2, f'{w:.1f}%', ha='center', va='center', fontsize=7, color='white')
     ax.text(i, 103, f'N={n}', ha='center', fontsize=7, color='grey')
 
 ax.set_xticks(x); ax.set_xticklabels(windows_order); ax.set_ylabel('% of patients')
@@ -319,7 +321,8 @@ ax.set_title('Nonindexed eGFR Change: DuBois vs Mosteller BSA Formula')
 ax.legend(framealpha=0.9)
 for i, (d, m) in enumerate(zip(dubois_vals, mosteller_vals)):
     diff = abs(m) - abs(d)
-    ax.text(i, min(d, m)-1.5, f'Diff: {diff:.1f}', ha='center', fontsize=8, color='grey')
+    # Place label inside the shorter (DuBois) bar
+    ax.text(i-w/2, d/2, f'Δ {diff:.1f}', ha='center', va='center', fontsize=8, fontweight='bold', color='white')
 plt.tight_layout()
 sfig3_path = save_fig(fig, 'sfig3_mosteller')
 
@@ -366,7 +369,8 @@ ax.axhline(0, color='black', linewidth=0.5)
 ax.set_ylabel('Mean change (mL/min)'); ax.set_title('Pre-operative Window Sensitivity')
 ax.legend(framealpha=0.9)
 for i, (v, n) in enumerate(zip(ni_vals, pre_sens['N_NI'])):
-    ax.text(i+w/2, v-1, f'N={int(n)}', ha='center', fontsize=7, color='grey')
+    # Place N label inside the negative orange bar, centered
+    ax.text(i+w/2, v/2, f'N={int(n)}', ha='center', va='center', fontsize=7, color='white', fontweight='bold')
 plt.tight_layout()
 sfig5_path = save_fig(fig, 'sfig5_pre_window')
 
@@ -384,7 +388,9 @@ ax.axhline(0, color='black', linewidth=0.5)
 ax.set_ylabel('Mean change (mL/min)'); ax.set_title('Galvao Date-Validated 12M Sensitivity')
 ax.legend(framealpha=0.9)
 for i, (n_idx, n_ni) in enumerate(zip(dv['N_idx'], dv['N_NI'])):
-    ax.text(i, 3, f'N idx={int(n_idx)}\nN NI={int(n_ni)}', ha='center', fontsize=7, color='grey')
+    # Place N labels inside the negative bar
+    y_mid = min(ni_dv[i], 0) / 2
+    ax.text(i+w/2, y_mid, f'N={int(n_idx)}/{int(n_ni)}', ha='center', va='center', fontsize=7, color='white', fontweight='bold')
 plt.tight_layout()
 sfig6_path = save_fig(fig, 'sfig6_galvao_datevalidated')
 
@@ -717,7 +723,7 @@ add_para(doc, 'None.')
 
 # ── DATA AVAILABILITY STATEMENT ──
 add_heading(doc, 'Data Availability Statement', level=2)
-add_para(doc, 'De-identified individual-level data are not publicly available because of privacy restrictions under the Brazilian General Data Protection Law (LGPD) and contractual restrictions involving the participating practices and laboratory. Analysis code and aggregated results are publicly available at https://github.com/RafaelBotan/bsa-indexing-bariatric-egfr and registered at https://osf.io/9r5w7/. Additional de-identified aggregate outputs may be available from the corresponding author on reasonable request and with permission from the data holders.')
+add_para(doc, 'De-identified individual-level data are not publicly available because of privacy restrictions under the Brazilian General Data Protection Law (LGPD) and contractual restrictions involving the participating practices and laboratory. Analysis code and aggregated results are permanently archived at Zenodo (doi:10.5281/zenodo.19155107) [18] and available at https://github.com/RafaelBotan/bsa-indexing-bariatric-egfr. The study was pre-registered at https://osf.io/9r5w7/. Additional de-identified aggregate outputs may be available from the corresponding author on reasonable request and with permission from the data holders.')
 
 doc.add_page_break()
 
@@ -730,8 +736,8 @@ references = [
     '1. Buchwald H, Avidor Y, Braunwald E, et al. Bariatric surgery: a systematic review and meta-analysis. JAMA. 2004;292(14):1724-1737. doi:10.1001/jama.292.14.1724',
     '2. Sjostrom L. Review of the key results from the Swedish Obese Subjects (SOS) trial. J Intern Med. 2013;273(3):219-234. doi:10.1111/joim.12012',
     '3. Chang AR, Chen Y, Still C, et al. Bariatric surgery is associated with improvement in kidney outcomes. Kidney Int. 2016;90(1):164-171. doi:10.1016/j.kint.2016.02.039',
-    '4. Friedman AN, Moe S, Gao D, et al. Measured and estimated glomerular filtration rate after bariatric surgery. J Ren Nutr. 2023;33(1):94-101. doi:10.1053/j.jrn.2022.03.003',
-    '5. Lieske JC, Collazo-Clavell ML, Engstrom BI, et al. Measured GFR and kidney outcomes after bariatric surgery. Clin J Am Soc Nephrol. 2024;19(3):305-313. doi:10.2215/CJN.0000000000000375',
+    '4. Friedman AN, Chang AR, Chuah LL, et al. Measurement, estimation, and correlates of the GFR before and after bariatric surgery. J Am Soc Nephrol. 2026. doi:10.1681/ASN.0000000797',
+    '5. Chagnac A, Weinstein T, Korzets A, Ramadan E, Hirsch J, Gafter U. Glomerular hemodynamics in severe obesity. Am J Physiol Renal Physiol. 2000;278(5):F817-F822. doi:10.1152/ajprenal.2000.278.5.F817',
     '6. KDIGO 2024 clinical practice guideline for the evaluation and management of chronic kidney disease. Kidney Int. 2024;105(4S):S117-S314. doi:10.1016/j.kint.2023.10.018',
     '7. Levey AS, Coresh J, Tighiouart H, Greene T, Inker LA. Measured and estimated glomerular filtration rate: current status and future directions. Nat Rev Nephrol. 2020;16(1):51-64. doi:10.1038/s41581-019-0191-y',
     '8. Delanaye P, Radermecker RP, Rorive M, Depas G, Krzesinski JM. Indexing glomerular filtration rate for body surface area in obese patients is misleading: concept and example. Nephrol Dial Transplant. 2005;20(10):2024-2028. doi:10.1093/ndt/gfh983',
@@ -739,11 +745,12 @@ references = [
     '10. von Elm E, Altman DG, Egger M, et al. The Strengthening the Reporting of Observational Studies in Epidemiology (STROBE) statement: guidelines for reporting observational studies. Lancet. 2007;370(9596):1453-1457. doi:10.1016/S0140-6736(07)61602-X',
     '11. Benchimol EI, Smeeth L, Guttmann A, et al. The REporting of studies Conducted using Observational Routinely-collected health Data (RECORD) statement. PLoS Med. 2015;12(10):e1001885. doi:10.1371/journal.pmed.1001885',
     '12. Inker LA, Eneanya ND, Coresh J, et al. New creatinine- and cystatin C-based equations to estimate GFR without race. N Engl J Med. 2021;385(19):1737-1749. doi:10.1056/NEJMoa2102953',
-    '13. Earley A, Miskulin D, Lamb EJ, Levey AS, Uhlig K. Estimating equations for glomerular filtration rate in the era of creatinine standardization: a systematic review. Ann Intern Med. 2012;156(11):785-795. doi:10.7326/0003-4819-156-6-201203200-00391',
+    '13. Earley A, Miskulin D, Lamb EJ, Levey AS, Uhlig K. Estimating equations for glomerular filtration rate in the era of creatinine standardization: a systematic review. Ann Intern Med. 2012;156(11):785-795. doi:10.7326/0003-4819-156-11-201203200-00391',
     '14. Du Bois D, Du Bois EF. A formula to estimate the approximate surface area if height and weight be known. Arch Intern Med. 1916;17(6_2):863-871. doi:10.1001/archinte.1916.00080130010002',
     '15. Mosteller RD. Simplified calculation of body-surface area. N Engl J Med. 1987;317(17):1098. doi:10.1056/NEJM198710223171717',
     '16. Shapley LS. A value for n-person games. In: Kuhn HW, Tucker AW, eds. Contributions to the Theory of Games II. Princeton University Press; 1953:307-317. doi:10.1515/9781400881970-018',
     '17. Efron B, Tibshirani RJ. An Introduction to the Bootstrap. Chapman & Hall/CRC; 1993.',
+    '18. Botan RN, Arruda S, Galv\u00e3o RO, Contreiras LBS, Rangel EB. Analysis code and aggregated results: BSA indexing artifact after bariatric surgery. Zenodo; 2026. doi:10.5281/zenodo.19155107',
 ]
 
 for ref in references:
