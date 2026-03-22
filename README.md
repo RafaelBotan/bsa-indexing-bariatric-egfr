@@ -98,7 +98,7 @@ Data/Results: CC-BY 4.0
 
 ## DOI
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.XXXXXXX.svg)](https://doi.org/10.5281/zenodo.XXXXXXX)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19155107.svg)](https://doi.org/10.5281/zenodo.19155107)
 
 *DOI will be assigned upon Zenodo release. Update the badge above after linking.*
 
